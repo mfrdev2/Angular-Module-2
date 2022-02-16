@@ -9,6 +9,9 @@ import {User} from "../../../models/User";
 export class UserEditComponent implements OnInit {
   @Input()
   user!:User
+
+  warningMessage!:string;
+
   constructor() { }
 
   ngOnInit(): void {
