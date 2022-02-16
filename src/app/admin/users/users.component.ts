@@ -13,7 +13,8 @@ export class UsersComponent implements OnInit, OnDestroy {
   subscription!: Subscription;
   users?: Array<User>;
 
-  selectedUser?: User
+  selectedUser?: User;
+  userAction?:string;
 
   constructor(private data: DataService, private route: ActivatedRoute, private router: Router) {
   }
@@ -24,14 +25,16 @@ export class UsersComponent implements OnInit, OnDestroy {
     })
     this.route.queryParams.subscribe((params) => {
       const id = params['id'];
+      const action = params['action']
       if (id) {
         this.selectedUser = this.users?.find(user => user.id === +id);
+        this.userAction = action;
       }
     })
   }
 
   setUser(id: number): void {
-    this.router.navigate(['admin', 'users'], {queryParams: {id: id}})
+    this.router.navigate(['admin', 'users'], {queryParams: {id: id,action:'view'}})
   }
 
   ngOnDestroy(): void {

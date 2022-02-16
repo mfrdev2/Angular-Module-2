@@ -11,15 +11,18 @@
       </tr>
       </thead>
       <tbody>
-      <tr *ngFor = "let user of users"> <!-- repeat this tr for each user -->
+      <tr *ngFor="let user of users"> <!-- repeat this tr for each user -->
         <td>{{user.id}}</td>
         <td>{{user.name}}</td>
-        <td><button (click)="setUser(user.id)" type="button" class="btn btn-primary">view</button></td>
+        <td>
+          <button (click)="setUser(user.id)" type="button" class="btn btn-primary">view</button>
+        </td>
       </tr>
       </tbody>
     </table>
   </div>
-  <div class="col-6" *ngIf = "selectedUser">
-    <app-user-detail [user]="selectedUser"></app-user-detail>
+  <div class="col-6" >
+    <app-user-detail *ngIf ="userAction === 'view'"  [user]="selectedUser!"></app-user-detail>
+    <app-user-edit *ngIf="userAction === 'edit'" [user]="selectedUser!"></app-user-edit>
   </div>
 </div>
