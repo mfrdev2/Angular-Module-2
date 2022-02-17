@@ -14,22 +14,28 @@ export class UserEditComponent implements OnInit {
   userForForm!: User;
 
   warningMessage!: string;
-  userPassword!:string;
-  userPassword2!:string;
+  userPassword!: string;
+  userPassword2!: string;
+
+  nameIsValid = false;
+  passwordIsValid = false;
+  passwordDoesMatch = false;
 
   constructor(private data: DataService, private router: Router) {
   }
 
   ngOnInit(): void {
     this.userForForm = Object.assign({}, this.user)
-    console.log('Loading' ,this.user.id)
+    this.checkNameValid();
+    this.checkPasswordValid();
+    console.log('Loading', this.user.id)
   }
 
   onSubmit(): void {
     if (this.user.id == null) {
-      this.data.addUser(this.userForForm,this.userPassword).subscribe(user=>{
+      this.data.addUser(this.userForForm, this.userPassword).subscribe(user => {
         this.router.navigate(['admin', 'users'], {queryParams: {id: user.id, action: 'view'}})
-      },error=>{
+      }, error => {
         console.error(error)
       })
     } else {
@@ -38,6 +44,28 @@ export class UserEditComponent implements OnInit {
       }, error => {
         console.error(error)
       })
+    }
+  }
+
+  checkNameValid(): void {
+    if (this.userForForm.name) {
+      this.nameIsValid = this.userForForm.name.trim().length > 0;
+    } else {
+      this.nameIsValid = false;
+    }
+  }
+
+  checkPasswordValid(): void {
+    if (this.userForForm.id != null) {
+      this.passwordDoesMatch = true;
+      this.passwordIsValid = true;
+    } else {
+      this.passwordDoesMatch = this.userPassword === this.userPassword2;
+      if (this.userPassword) {
+        this.passwordIsValid = this.userPassword.trim().length > 0;
+      } else {
+        this.passwordIsValid = false;
+      }
     }
 
   }

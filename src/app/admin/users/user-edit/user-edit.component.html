@@ -5,21 +5,24 @@
 <form #userForm = "ngForm">
   <div class="form-group">
     <label for="name">Name</label>
-    <input type="text" class="form-control" id="name" placeholder="user name" [(ngModel)]="userForForm.name" name="name" required #nameField ="ngModel" >
-    <div *ngIf = "nameField.invalid && nameField.touched" class="alert alert-danger">error message placeholder</div>
+    <input type="text" class="form-control" id="name" placeholder="user name" [(ngModel)]="userForForm.name" name="name" required #nameField ="ngModel" (change)="checkNameValid()" >
+    <div *ngIf = "nameField.invalid && nameField.touched" class="alert alert-danger">Name is required.</div>
+    <div *ngIf = "!nameIsValid && nameField.touched" class="alert alert-danger">Name can't be blank</div>
 
   </div>
 
   <div class="form-group" *ngIf = "user.id==null"> <!-- only show this field on adding a user -->
     <label for="password">Password</label>
-    <input type="password" class="form-control" id="password" placeholder="password" name="password"  [(ngModel)]="userPassword" required #passField = "ngModel">
-    <div *ngIf = "passField.invalid && passField.touched" class="alert alert-danger">error message placeholder</div>
+    <input type="password" class="form-control" id="password" placeholder="password" name="password"  [(ngModel)]="userPassword" required #passField = "ngModel" (change)="checkPasswordValid()">
+    <div [hidden]= "passField.valid || passField.untouched" class="alert alert-danger">password is required.</div>
+    <div [hidden] = "passwordIsValid || passField.untouched" class="alert alert-danger">password can't be blank</div>
 
 
     <label for="password2">Confirm Password</label>
-    <input type="password" class="form-control" id="password2" placeholder="password" name="password2"  [(ngModel)]="userPassword2" required #passField2 = "ngModel">
-    <div *ngIf = "passField2.invalid && passField2.touched" class="alert alert-danger">error message placeholder</div>
-  </div>
+    <input type="password" class="form-control" id="password2" placeholder="password" name="password2"  [(ngModel)]="userPassword2" required #passField2 = "ngModel" (change)="checkPasswordValid()">
+    <div [hidden] = "passwordDoesMatch || passField2.untouched" class="alert alert-danger">password doesn't match!</div>
 
-  <button type="button" (click)="onSubmit()"[disabled]="userForm.invalid" class="btn btn-primary">Save</button>
+  </div>
+<br/>
+  <button  type="button" (click)="onSubmit()"[disabled]="userForm.invalid || !nameIsValid || !passwordIsValid || !passwordDoesMatch" class="btn btn-primary">Save</button>
 </form>
