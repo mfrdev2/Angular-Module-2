@@ -14,6 +14,7 @@ export class RoomsComponent implements OnInit, OnDestroy {
   selectedRoom?: Room;
 
   subscription!: Subscription;
+  action?: string;
 
   constructor(private dataService: DataService, private route: ActivatedRoute, private router: Router) {
   }
@@ -27,14 +28,24 @@ export class RoomsComponent implements OnInit, OnDestroy {
       const id = params['id'];
       if (id) {
         this.selectedRoom = this.rooms?.find(room => room.id === +id);
+        this.action = params['action'];
+      }
+      if (params['action'] == 'add') {
+        this.selectedRoom = new Room();
+        this.action = 'edit';
       }
 
     })
   }
 
   setRoom(id: number): void {
-    this.router.navigate(['admin', 'rooms'], {queryParams: {id: id}})
+    this.router.navigate(['admin', 'rooms'], {queryParams: {id: id, action: 'view'}})
   }
+
+  addRoom(): void {
+    this.router.navigate(['admin', 'rooms'], {queryParams: {action: 'add'}})
+  }
+
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
