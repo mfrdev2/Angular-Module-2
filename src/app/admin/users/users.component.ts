@@ -25,16 +25,20 @@ export class UsersComponent implements OnInit, OnDestroy {
     })
     this.route.queryParams.subscribe((params) => {
       const id = params['id'];
-      const action = params['action']
+      this.userAction = params['action']
       if (id) {
         this.selectedUser = this.users?.find(user => user.id === +id);
-        this.userAction = action;
       }
     })
   }
 
   setUser(id: number): void {
     this.router.navigate(['admin', 'users'], {queryParams: {id: id,action:'view'}})
+  }
+
+  addUser():void{
+    this.selectedUser = new User();
+    this.router.navigate(['admin', 'users'], {queryParams: {action:'add'}})
   }
 
   ngOnDestroy(): void {

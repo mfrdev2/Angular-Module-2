@@ -14,20 +14,32 @@ export class UserEditComponent implements OnInit {
   userForForm!: User;
 
   warningMessage!: string;
+  userPassword!:string;
+  userPassword2!:string;
 
-  constructor(private data: DataService,private router:Router) {
+  constructor(private data: DataService, private router: Router) {
   }
 
   ngOnInit(): void {
     this.userForForm = Object.assign({}, this.user)
+    console.log('Loading' ,this.user.id)
   }
 
   onSubmit(): void {
-    this.data.updateUser(this.userForForm).subscribe(data => {
-      this.router.navigate(['admin','users'],{queryParams:{id:data.id,action:'view'}})
-    }, error => {
-      console.error(error)
-    })
+    if (this.user.id == null) {
+      this.data.addUser(this.userForForm,this.userPassword).subscribe(user=>{
+        this.router.navigate(['admin', 'users'], {queryParams: {id: user.id, action: 'view'}})
+      },error=>{
+        console.error(error)
+      })
+    } else {
+      this.data.updateUser(this.userForForm).subscribe(user => {
+        this.router.navigate(['admin', 'users'], {queryParams: {id: user.id, action: 'view'}})
+      }, error => {
+        console.error(error)
+      })
+    }
+
   }
 
 }

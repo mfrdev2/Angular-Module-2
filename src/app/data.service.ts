@@ -24,6 +24,12 @@ export class DataService {
     return of(originalUser!)
   }
 
+  addUser(user: User ,password:string): Observable<User>{
+    user.id = this.users.length+1;
+    this.users.push(user)
+    return of(user)
+  }
+
   constructor() {
     this.rooms = new Array<Room>();
     //---------------------------
