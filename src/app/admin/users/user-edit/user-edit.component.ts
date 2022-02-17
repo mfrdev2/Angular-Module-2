@@ -1,5 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {User} from "../../../models/User";
+import {DataService} from "../../../data.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-user-edit',
@@ -8,19 +10,24 @@ import {User} from "../../../models/User";
 })
 export class UserEditComponent implements OnInit {
   @Input()
-  user!:User
-  userForForm!:User;
+  user!: User
+  userForForm!: User;
 
-  warningMessage!:string;
+  warningMessage!: string;
 
-  constructor() { }
-
-  ngOnInit(): void {
-    this.userForForm = Object.assign({},this.user)
+  constructor(private data: DataService,private router:Router) {
   }
 
-  onSubmit():void{
-  console.log(this.userForForm.name);
+  ngOnInit(): void {
+    this.userForForm = Object.assign({}, this.user)
+  }
+
+  onSubmit(): void {
+    this.data.updateUser(this.userForForm).subscribe(data => {
+      this.router.navigate(['admin','users'],{queryParams:{id:data.id,action:'view'}})
+    }, error => {
+      console.error(error)
+    })
   }
 
 }
