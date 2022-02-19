@@ -40,7 +40,7 @@ export class DataService {
 
   addRoom(room: Room): Observable<Room>{
     room.id = this.rooms.length+1;
-    this.users.push(room)
+    this.rooms.push(room)
     return of(room)
   }
 
