@@ -1,6 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {Layout, LayoutCapacity, Room} from "../../../models/Room";
-import {FormControl, FormGroup} from "@angular/forms";
+import {FormBuilder, FormGroup} from "@angular/forms";
 
 @Component({
   selector: 'app-room-edit',
@@ -11,17 +11,14 @@ export class RoomEditComponent implements OnInit {
   @Input()
   room?: Room
 
-  roomForm = new FormGroup({
-    roomName: new FormControl('roomName'),
-    location: new FormControl('location')
-  })
+  roomForm!:FormGroup;
 
   layouts = Object.keys(Layout);
   values = Object.values(Layout);
 
 
 
-  constructor() {
+  constructor(private formBuilder:FormBuilder) {
   }
 
   getKey(val:any):string{
@@ -29,15 +26,28 @@ export class RoomEditComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.roomForm.patchValue({
-      roomName: this.room?.name,
-      location: this.room?.location
-
-    })
-
+    this.roomForm = this.formBuilder.group(
+      {
+        roomName: this.room?.name,
+        location: this.room?.location
+      }
+    )
 
     for(let layout of this.values){
-      this.roomForm.addControl(`layout${this.getKey(layout)}` , new FormControl(`layout${this.getKey(layout)}`))
+      let layoutCapacity:LayoutCapacity | undefined;
+      if(this.getKey(layout).trim() === 'THEATER'){
+        layoutCapacity = this.room?.capacities.find(lc=>lc.layout === Layout.THEATER);
+      }
+      if(this.getKey(layout).trim() === 'USHAPE'){
+        layoutCapacity = this.room?.capacities.find(lc=>lc.layout === Layout.USHAPE);
+      }
+
+      if(this.getKey(layout).trim() === 'BOARD'){
+        layoutCapacity = this.room?.capacities.find(lc=>lc.layout === Layout.BOARD);
+      }
+
+      const initialCapacity = layoutCapacity == null? 0:layoutCapacity.capacity;
+      this.roomForm.addControl(`layout${this.getKey(layout)}` , this.formBuilder.control(initialCapacity));
     }
 
     console.log(typeof (Layout.BOARD))
@@ -47,8 +57,8 @@ export class RoomEditComponent implements OnInit {
 
   onSubmit(): void {
     if(this.room){
-      this.room.name =  this.roomForm.controls['roomName'].value;
-      this.room.location = this.roomForm.value['location'];
+      this.room.name =  this.roomForm?.controls['roomName'].value;
+      this.room.location = this.roomForm?.value['location'];
 
       this.room.capacities = new Array<LayoutCapacity>()
       for(let layout of this.values){
@@ -61,8 +71,8 @@ export class RoomEditComponent implements OnInit {
         }else if( this.getKey(layout) === 'BOARD'){
           layoutCapacity.layout = Layout.BOARD
         }
-        let control = this.roomForm.controls[`layout${this.getKey(layout)}`];
-        layoutCapacity.capacity =(!isNaN(control.value))?control.value:'';
+        let control = this.roomForm?.controls[`layout${this.getKey(layout)}`];
+        layoutCapacity.capacity =(!isNaN(control?.value))?control?.value:'';
 
         this.room.capacities.push(layoutCapacity);
 
@@ -73,8 +83,8 @@ export class RoomEditComponent implements OnInit {
 
 
 
-    console.log(this.roomForm.controls['roomName'].value);
-    console.log(this.roomForm.value['location']);
+    console.log(this.roomForm?.controls['roomName'].value);
+    console.log(this.roomForm?.value['location']);
     console.log(this.room?.capacities)
     console.log(this.roomForm)
   }
