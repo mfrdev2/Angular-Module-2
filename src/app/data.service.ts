@@ -24,10 +24,24 @@ export class DataService {
     return of(originalUser!)
   }
 
+  updateRoom(newRoom: Room): Observable<Room> {
+    const originalUser = this.rooms.find(r => r.id === newRoom.id);
+    originalUser!.name = newRoom.name;
+    originalUser!.location = newRoom.location;
+    originalUser!.capacities = newRoom.capacities;
+    return of(originalUser!)
+  }
+
   addUser(user: User ,password:string): Observable<User>{
     user.id = this.users.length+1;
     this.users.push(user)
     return of(user)
+  }
+
+  addRoom(room: Room): Observable<Room>{
+    room.id = this.rooms.length+1;
+    this.users.push(room)
+    return of(room)
   }
 
   constructor() {
