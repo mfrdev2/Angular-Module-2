@@ -11,7 +11,7 @@ export class LayoutCapacity{
 }
 
 export enum Layout {
-  THEATER= "Theater",
-  USHAPE= "U-Shape",
-  BOARD= "Board Meeting",
+  THEATER= 'Theater',
+  USHAPE= 'U-Shape',
+  BOARD= 'Board Meeting'
 }
