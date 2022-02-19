@@ -27,6 +27,7 @@ export class RoomsComponent implements OnInit, OnDestroy {
 
     this.route.queryParams.subscribe((params) => {
       const id = params['id'];
+      this.action = '';
       if (id) {
         this.selectedRoom = this.rooms?.find(room => room.id === +id);
         this.action = params['action'];
