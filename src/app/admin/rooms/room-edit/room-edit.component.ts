@@ -3,6 +3,8 @@ import {Layout, LayoutCapacity, Room} from "../../../models/Room";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {DataService} from "../../../data.service";
 import {Router} from "@angular/router";
+import {ResetService} from "../../../reset.service";
+import {User} from "../../../models/User";
 
 @Component({
   selector: 'app-room-edit',
@@ -19,7 +21,7 @@ export class RoomEditComponent implements OnInit {
   values = Object.values(Layout);
 
 
-  constructor(private data: DataService, private formBuilder: FormBuilder, private router: Router) {
+  constructor(private data: DataService, private formBuilder: FormBuilder, private router: Router,private resetForm:ResetService) {
   }
 
   getKey(val: any): string {
@@ -27,31 +29,13 @@ export class RoomEditComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.roomForm = this.formBuilder.group(
-      {
-        roomName: [this.room?.name, Validators.required],
-        location: [this.room?.location, Validators.min(2)]
+    this.initializeForm();
+    this.resetForm.resetForm.subscribe(roomOrUser=>{
+      if(roomOrUser instanceof Room){
+        this.room = roomOrUser;
+        this.initializeForm();
       }
-    )
-
-    for (let layout of this.values) {
-      let layoutCapacity: LayoutCapacity | undefined;
-      if (this.getKey(layout).trim() === 'THEATER') {
-        layoutCapacity = this.room?.capacities.find(lc => lc.layout === Layout.THEATER);
-      }
-      if (this.getKey(layout).trim() === 'USHAPE') {
-        layoutCapacity = this.room?.capacities.find(lc => lc.layout === Layout.USHAPE);
-      }
-
-      if (this.getKey(layout).trim() === 'BOARD') {
-        layoutCapacity = this.room?.capacities.find(lc => lc.layout === Layout.BOARD);
-      }
-
-      const initialCapacity = layoutCapacity == null ? 0 : layoutCapacity.capacity;
-      this.roomForm.addControl(`layout${this.getKey(layout)}`, this.formBuilder.control(initialCapacity));
-    }
-
-    console.log(typeof (Layout.BOARD))
+    })
   }
 
 
@@ -100,4 +84,29 @@ export class RoomEditComponent implements OnInit {
     console.log(this.roomForm)
   }
 
+  private initializeForm() {
+    this.roomForm = this.formBuilder.group(
+      {
+        roomName: [this.room?.name, Validators.required],
+        location: [this.room?.location, Validators.min(2)]
+      }
+    )
+
+    for (let layout of this.values) {
+      let layoutCapacity: LayoutCapacity | undefined;
+      if (this.getKey(layout).trim() === 'THEATER') {
+        layoutCapacity = this.room?.capacities.find(lc => lc.layout === Layout.THEATER);
+      }
+      if (this.getKey(layout).trim() === 'USHAPE') {
+        layoutCapacity = this.room?.capacities.find(lc => lc.layout === Layout.USHAPE);
+      }
+
+      if (this.getKey(layout).trim() === 'BOARD') {
+        layoutCapacity = this.room?.capacities.find(lc => lc.layout === Layout.BOARD);
+      }
+
+      const initialCapacity = layoutCapacity == null ? 0 : layoutCapacity.capacity;
+      this.roomForm.addControl(`layout${this.getKey(layout)}`, this.formBuilder.control(initialCapacity));
+    }
+  }
 }

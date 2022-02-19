@@ -3,6 +3,7 @@ import {User} from "../../models/User";
 import {DataService} from "../../data.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Subscription} from "rxjs";
+import {ResetService} from "../../reset.service";
 
 @Component({
   selector: 'app-users',
@@ -16,7 +17,7 @@ export class UsersComponent implements OnInit, OnDestroy {
   selectedUser?: User;
   userAction?:string;
 
-  constructor(private data: DataService, private route: ActivatedRoute, private router: Router) {
+  constructor(private data: DataService, private route: ActivatedRoute, private router: Router,private resetForm:ResetService) {
   }
 
   ngOnInit(): void {
@@ -39,6 +40,7 @@ export class UsersComponent implements OnInit, OnDestroy {
   addUser():void{
     this.selectedUser = new User();
     this.router.navigate(['admin', 'users'], {queryParams: {action:'add'}})
+    this.resetForm.resetForm.emit(this.selectedUser)
   }
 
   ngOnDestroy(): void {

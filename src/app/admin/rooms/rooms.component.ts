@@ -3,6 +3,7 @@ import {DataService} from "../../data.service";
 import {Room} from "../../models/Room";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Subscription} from "rxjs";
+import {ResetService} from "../../reset.service";
 
 @Component({
   selector: 'app-rooms',
@@ -16,7 +17,7 @@ export class RoomsComponent implements OnInit, OnDestroy {
   subscription!: Subscription;
   action?: string;
 
-  constructor(private dataService: DataService, private route: ActivatedRoute, private router: Router) {
+  constructor(private dataService: DataService, private route: ActivatedRoute, private router: Router,private resetForm:ResetService) {
   }
 
   ngOnInit(): void {
@@ -33,6 +34,7 @@ export class RoomsComponent implements OnInit, OnDestroy {
       if (params['action'] == 'add') {
         this.selectedRoom = new Room();
         this.action = 'edit';
+        this.resetForm.resetForm.emit(this.selectedRoom);
       }
 
     })

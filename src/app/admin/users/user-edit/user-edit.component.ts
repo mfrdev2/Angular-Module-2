@@ -2,6 +2,7 @@ import {Component, Input, OnInit} from '@angular/core';
 import {User} from "../../../models/User";
 import {DataService} from "../../../data.service";
 import {Router} from "@angular/router";
+import {ResetService} from "../../../reset.service";
 
 @Component({
   selector: 'app-user-edit',
@@ -21,14 +22,17 @@ export class UserEditComponent implements OnInit {
   passwordIsValid = false;
   passwordDoesMatch = false;
 
-  constructor(private data: DataService, private router: Router) {
+  constructor(private data: DataService, private router: Router,private resetForm:ResetService) {
   }
 
   ngOnInit(): void {
-    this.userForForm = Object.assign({}, this.user)
-    this.checkNameValid();
-    this.checkPasswordValid();
-    console.log('Loading', this.user.id)
+      this.initializeForm();
+      this.resetForm.resetForm.subscribe(roomOrUser=>{
+        if(roomOrUser instanceof User){
+          this.user = roomOrUser;
+          this.initializeForm();
+        }
+      })
   }
 
   onSubmit(): void {
@@ -70,4 +74,10 @@ export class UserEditComponent implements OnInit {
 
   }
 
+  private initializeForm() {
+    this.userForForm = Object.assign({}, this.user)
+    this.checkNameValid();
+    this.checkPasswordValid();
+    console.log('Loading', this.user.id)
+  }
 }
