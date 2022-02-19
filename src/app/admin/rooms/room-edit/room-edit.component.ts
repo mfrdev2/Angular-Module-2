@@ -1,6 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {Layout, LayoutCapacity, Room} from "../../../models/Room";
-import {FormBuilder, FormGroup} from "@angular/forms";
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 
 @Component({
   selector: 'app-room-edit',
@@ -28,8 +28,8 @@ export class RoomEditComponent implements OnInit {
   ngOnInit(): void {
     this.roomForm = this.formBuilder.group(
       {
-        roomName: this.room?.name,
-        location: this.room?.location
+        roomName: [this.room?.name,Validators.required],
+        location: [this.room?.location,Validators.min(2)]
       }
     )
 

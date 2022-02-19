@@ -4,13 +4,13 @@
   <div class="form-group">
     <label for="name">Name</label>
     <input type="text" class="form-control" id="name" placeholder="room name" formControlName="roomName">
-    <div class="alert alert-danger"></div>
+    <div class="alert alert-danger" *ngIf = "roomForm.controls['roomName'].invalid && roomForm.controls['roomName'].dirty"></div>
 
   </div>
   <div class="form-group">
     <label for="location">Location</label>
     <input type="text" class="form-control" id="location" placeholder="location" formControlName="location">
-    <div class="alert alert-danger"></div>
+    <div class="alert alert-danger" *ngIf = "roomForm.controls['location'].invalid && roomForm.controls['location'].dirty"></div>
   </div>
 
   <h2>This room can accomodate:</h2>
@@ -23,6 +23,6 @@
   <br/>
 
 
-  <button type="button" (click)="onSubmit()" class="btn btn-primary">Save</button>
+  <button type="button" (click)="onSubmit()" [disabled]="roomForm.invalid" class="btn btn-primary">Save</button>
 </form>
 
