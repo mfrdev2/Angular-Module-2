@@ -4,7 +4,7 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {DataService} from "../../../data.service";
 import {Router} from "@angular/router";
 import {ResetService} from "../../../reset.service";
-import {User} from "../../../models/User";
+
 
 @Component({
   selector: 'app-room-edit',
